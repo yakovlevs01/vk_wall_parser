@@ -1,0 +1,9 @@
+select = ["E", "F", "W", "N", "D", "UP", "S", "B", "SIM", "PD", "NPY"]
+
+ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107"]
+
+[per-file-ignores]
+"__init__.py" = ["E402"]
+
+[pydocstyle]
+convention = "google"

@@ -5,3 +5,5 @@ config.json
 output.txt
 result.md
 result_sunday.md
+
+__pycache__

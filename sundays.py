@@ -10,7 +10,7 @@ def is_sunday(unixtime):
     return dt.weekday() == 6
 
 
-def is_time_after_some_date(unixtime, some_datetime_unix):
+def is_after(unixtime, some_datetime_unix):
     return int(unixtime) > int(some_datetime_unix)
 
 

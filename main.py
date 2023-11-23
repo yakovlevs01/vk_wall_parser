@@ -2,7 +2,7 @@ import vk_api
 import os
 import json
 from dotenv import load_dotenv
-from sundays import sundays_to_2016, is_appropriate_post, convert_unixtime_to_datetime
+from sundays import is_after, is_sunday, convert_unixtime_to_datetime, date_stop
 
 
 load_dotenv()
@@ -88,7 +88,9 @@ def parse_only_sunday_posts():
             post_offset += count
 
             for post_data in posts:
-                if is_appropriate_post(post_data["date"], sundays_to_2016):
+                if is_sunday(post_data["date"]) and is_after(
+                    post_data["date"], date_stop
+                ):
                     output_file.write(
                         "# "
                         + str(counter)
@@ -114,7 +116,7 @@ def parse_all_posts():
     print(f"{nposts_total = }")
     print(f"{nposts_to_parse = }")
 
-    counter = nposts_to_parse # for enumerating posts. most recent = max value
+    counter = nposts_to_parse  # for enumerating posts. most recent = max value
     post_offset = 0
 
     with open("result.md", "w", encoding="utf-8") as output_file:
@@ -146,4 +148,5 @@ def parse_all_posts():
 
 
 if __name__ == "__main__":
-    parse_all_posts()
+    #parse_all_posts()
+    parse_only_sunday_posts()

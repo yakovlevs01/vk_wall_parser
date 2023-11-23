@@ -57,7 +57,9 @@ def parse_posts(offset: int, num_to_parse: int = MAX_COUNT) -> list[dict[str,]]:
 def parse_only_sunday_posts():
     """Function needed on my specific task.
 
-    I needed to parse only posts that were published on sundays.
+    I needed to parse only posts that
+      1) were published on sundays
+      2) were published after some date (18 sept 2016)
     So after parsing all posts we need to filter only ones
     that is appropriate and than write them to file.
     """

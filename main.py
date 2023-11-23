@@ -30,6 +30,11 @@ def get_total_num_of_posts() -> int:
 
 
 def parse_posts(offset: int, num_to_parse: int = MAX_COUNT) -> list[dict[str,]]:
+    """Offset is number of posts to skip from the last (by date) post.
+
+    so, if we enumerate posts from nposts to 1 (going backwards in time),
+    this func parses    [offset; offset + num_to_parse]
+    """
     data = api.method(
         method="wall.get",
         values={
@@ -63,7 +68,7 @@ def parse_only_sunday_posts():
     counter = nposts_to_parse
     post_offset = 0
 
-    with open("result.md", "w", encoding="utf-8") as output_file:
+    with open("result_sunday.md", "w", encoding="utf-8") as output_file:
         while post_offset < nposts_to_parse:
             count = (  # number of posts to parse on this iteration
                 MAX_COUNT

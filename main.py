@@ -2,7 +2,7 @@ import vk_api
 import os
 import json
 from dotenv import load_dotenv
-from test import sundays_to_2016, is_appropriate_post, convert_unixtime_to_datetime
+from sundays import sundays_to_2016, is_appropriate_post, convert_unixtime_to_datetime
 
 
 load_dotenv()
@@ -55,6 +55,12 @@ def parse_posts(offset: int, num_to_parse: int = MAX_COUNT) -> list[dict[str,]]:
 
 
 def parse_only_sunday_posts():
+    """Function needed on my specific task.
+
+    I needed to parse only posts that were published on sundays.
+    So after parsing all posts we need to filter only ones
+    that is appropriate and than write them to file.
+    """
     global nposts_to_parse
 
     nposts_total = get_total_num_of_posts()
@@ -108,7 +114,7 @@ def parse_all_posts():
     print(f"{nposts_total = }")
     print(f"{nposts_to_parse = }")
 
-    counter = nposts_to_parse
+    counter = nposts_to_parse # for enumerating posts. most recent = max value
     post_offset = 0
 
     with open("result.md", "w", encoding="utf-8") as output_file:

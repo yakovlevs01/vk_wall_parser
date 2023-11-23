@@ -73,23 +73,23 @@ def parse_only_sunday_posts():
     print(f"{nposts_total = }")
     print(f"{nposts_to_parse = }")
 
-    counter = nposts_to_parse
-    post_offset = 0
+    counter = 1
+    post_offset = nposts_to_parse
 
     with open("result_sunday.md", "w", encoding="utf-8") as output_file:
-        while post_offset < nposts_to_parse:
+        while post_offset > 0:
             count = (  # number of posts to parse on this iteration
                 MAX_COUNT
-                if nposts_to_parse - post_offset > MAX_COUNT
-                else nposts_to_parse - post_offset
+                if post_offset >= 100
+                else post_offset
             )
 
-            print(f"Parsing posts from {post_offset} to {post_offset + count}")
+            print(f"Parsing posts from {post_offset - count} to {post_offset}")
 
-            posts = parse_posts(post_offset, count)
-            post_offset += count
+            posts = parse_posts(post_offset - count, count)
+            post_offset -= count
 
-            for post_data in posts:
+            for post_data in posts[::-1]:
                 if is_sunday(post_data["date"]) and is_after(
                     post_data["date"], date_stop
                 ):
@@ -104,7 +104,7 @@ def parse_only_sunday_posts():
                         + post_data["text"]
                         + "\n\n---\n\n"
                     )
-                    counter -= 1
+                    counter += 1
 
 
 def parse_all_posts():

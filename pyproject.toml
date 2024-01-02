@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "vk-wall-parser"
+version = "0.1.0"
+description = ""
+authors = ["yakovlevs01 <yakovlevs01@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+vk-api = "^11.9.9"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.9"
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.ruff]
+extend-include = ["*.ipynb"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

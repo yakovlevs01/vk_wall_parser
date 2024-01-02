@@ -18,7 +18,7 @@ GRP_ID = config["owner_id"]  # VK group ID with minus sign
 nposts_to_parse = config["number_of_posts_to_parse"]  # 0 to parse all
 
 
-api = vk_api.VkApi(token=ACCESS_TOKEN, api_version="5.137")
+api = vk_api.VkApi(token=ACCESS_TOKEN, api_version="5.199")
 
 
 def get_total_num_of_posts() -> int:

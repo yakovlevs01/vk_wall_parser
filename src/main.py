@@ -158,4 +158,3 @@ def parse_all_posts() -> None:
 
 if __name__ == "__main__":
     parse_all_posts()
-    parse_only_sunday_posts()

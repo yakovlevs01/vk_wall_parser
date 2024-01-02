@@ -70,8 +70,10 @@ def parse_only_sunday_posts() -> None:
         2) were published after some date (which unixtime is 1474146000)
     So after parsing all posts we need to filter only ones
       that is appropriate and than write them to file.
+    Also, enumerates all posts.
     """
     date_stop = 1474146000  # 18 сентября 2016 0:00
+    global nposts_to_parse  # noqa:PLW0603
 
     nposts_total = get_total_num_of_posts()
 
@@ -115,12 +117,8 @@ def parse_only_sunday_posts() -> None:
 
 
 def parse_all_posts() -> None:
-    """Function to parse all posts from VK group.
-
-    Uses nposts_to_parse from config.json file, enumerates them and writes them to file.
-    """
     nposts_total = get_total_num_of_posts()
-
+    global nposts_to_parse  # noqa:PLW0603
     if not nposts_to_parse or nposts_total < nposts_to_parse:
         nposts_to_parse = nposts_total
 
@@ -159,4 +157,5 @@ def parse_all_posts() -> None:
 
 
 if __name__ == "__main__":
+    parse_all_posts()
     parse_only_sunday_posts()

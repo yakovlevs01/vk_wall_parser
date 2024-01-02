@@ -4,7 +4,7 @@ import datetime
 def convert_unixtime_to_datetime(unixtime: int) -> str:
     return datetime.datetime.fromtimestamp(
         unixtime,
-        tz=datetime.tzinfo.utcoffset(3),
+        tz=datetime.timezone(datetime.timedelta(hours=3)),
     ).strftime(
         "%d.%m.%Y, %H:%M:%S",
     )
@@ -12,7 +12,10 @@ def convert_unixtime_to_datetime(unixtime: int) -> str:
 
 def is_sunday(unixtime: int) -> bool:
     sunday = 6
-    dt = datetime.datetime.fromtimestamp(unixtime, tz=datetime.tzinfo.utcoffset(3))
+    dt = datetime.datetime.fromtimestamp(
+        unixtime,
+        tz=datetime.timezone(datetime.timedelta(hours=3)),
+    )
     return dt.weekday() == sunday
 
 

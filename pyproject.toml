@@ -13,22 +13,14 @@ python-dotenv = "^1.0.0"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.9"
 
-[tool.ruff.pydocstyle]
-convention = "google"
-
-[tool.ruff.lint]
-fixable = ["ALL"]
-select = ["ALL"]
-ignore = ["I", "EM", "FBT", "TRY003", "S101", "D1", "FA", "ANN101"]
-
 [tool.ruff]
+fix = true
+#unsafe-fixes = true
+line-length = 120
 extend-include = ["*.ipynb"]
-
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "lf"
+select = ["ALL"]
+ignore = ["EM", "FBT", "TRY003", "S101", "D1", "FA", "ANN101"]
+pydocstyle.convention = "google"
 
 [build-system]
 requires = ["poetry-core"]

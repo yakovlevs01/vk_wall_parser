@@ -16,6 +16,11 @@ ruff = "^0.1.9"
 [tool.ruff.pydocstyle]
 convention = "google"
 
+[tool.ruff.lint]
+fixable = ["ALL"]
+select = ["ALL"]
+ignore = ["I", "EM", "FBT", "TRY003", "S101", "D1", "FA", "ANN101"]
+
 [tool.ruff]
 extend-include = ["*.ipynb"]
 

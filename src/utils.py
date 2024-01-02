@@ -1,14 +1,20 @@
 import datetime
 
 
-def convert_unixtime_to_datetime(unixtime):
-    return datetime.datetime.fromtimestamp(unixtime).strftime("%d.%m.%Y, %H:%M:%S")
+def convert_unixtime_to_datetime(unixtime: int) -> str:
+    return datetime.datetime.fromtimestamp(
+        unixtime,
+        tz=datetime.tzinfo.utcoffset(3),
+    ).strftime(
+        "%d.%m.%Y, %H:%M:%S",
+    )
 
 
-def is_sunday(unixtime):
-    dt = datetime.datetime.utcfromtimestamp(unixtime)
-    return dt.weekday() == 6
+def is_sunday(unixtime: int) -> bool:
+    sunday = 6
+    dt = datetime.datetime.fromtimestamp(unixtime, tz=datetime.tzinfo.utcoffset(3))
+    return dt.weekday() == sunday
 
 
-def is_after(unixtime, some_datetime_unix):
-    return int(unixtime) > int(some_datetime_unix)
+def is_after(unixtimestamp: int, other_unixtimestamp: int) -> bool:
+    return int(unixtimestamp) > int(other_unixtimestamp)

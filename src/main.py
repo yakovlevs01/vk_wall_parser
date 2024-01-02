@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 
 import vk_api
 from dotenv import load_dotenv
@@ -9,7 +10,7 @@ load_dotenv()
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 MAX_COUNT = 100  # API limit per one request
 
-with open("../config.json") as config_file:
+with Path.open("../config.json") as config_file:
     config = json.load(config_file)
 
 
@@ -21,19 +22,26 @@ api = vk_api.VkApi(token=ACCESS_TOKEN, api_version="5.137")
 
 
 def get_total_num_of_posts() -> int:
-    total_num_of_posts = api.method(
+    return api.method(
         method="wall.get",
         values={"owner_id": GRP_ID, "count": 1},
     )["count"]
 
-    return total_num_of_posts
-
 
 def parse_posts(offset: int, num_to_parse: int = MAX_COUNT) -> list[dict[str,]]:
-    """Offset is number of posts to skip from the last (by date) post.
+    """Function uses API method wall.get to parse posts.
 
-    so, if we enumerate posts from nposts to 1 (going backwards in time),
-    this func parses    [offset; offset + num_to_parse]
+    Args:
+        offset: the number of posts to skip from the last (by date) post.
+            so, if we enumerate posts from nposts to 1 (going backwards in time),
+            this func parses [offset; offset + num_to_parse]
+        num_to_parse: the number of posts to parse. By default MAX_COUNT=100 (api limit)
+
+    Returns:
+        list of posts, each post is the dict with keys:
+            text - full text of post
+            date - unixtime of post publication
+            link_to_post - link to post on VK
     """
     data = api.method(
         method="wall.get",
@@ -54,18 +62,16 @@ def parse_posts(offset: int, num_to_parse: int = MAX_COUNT) -> list[dict[str,]]:
     ]
 
 
-def parse_only_sunday_posts():
-    """Function needed on my specific task.
+def parse_only_sunday_posts() -> None:
+    """Function for my specific task.
 
     I needed to parse only posts that
-      1) were published on sundays
-      2) were published after some date (18 sept 2016)
+        1) were published on sundays
+        2) were published after some date (which unixtime is 1474146000)
     So after parsing all posts we need to filter only ones
-    that is appropriate and than write them to file.
+      that is appropriate and than write them to file.
     """
-
-    DATE_STOP = 1474146000  # 18 сентября 2016 0:00
-    global nposts_to_parse
+    date_stop = 1474146000  # 18 сентября 2016 0:00
 
     nposts_total = get_total_num_of_posts()
 
@@ -78,10 +84,10 @@ def parse_only_sunday_posts():
     counter = 1
     post_offset = nposts_to_parse
 
-    with open("../results/sunday.md", "w", encoding="utf-8") as output_file:
+    with Path.open("../results/sunday.md", "w", encoding="utf-8") as output_file:
         while post_offset > 0:
             count = (  # number of posts to parse on this iteration
-                MAX_COUNT if post_offset >= 100 else post_offset
+                MAX_COUNT if post_offset >= MAX_COUNT else post_offset
             )
 
             print(f"Parsing posts from {post_offset - count} to {post_offset}")
@@ -91,7 +97,8 @@ def parse_only_sunday_posts():
 
             for post_data in posts[::-1]:
                 if is_sunday(post_data["date"]) and is_after(
-                    post_data["date"], DATE_STOP
+                    post_data["date"],
+                    date_stop,
                 ):
                     output_file.write(
                         "# "
@@ -102,14 +109,16 @@ def parse_only_sunday_posts():
                         + post_data["link_to_post"]
                         + "\n\n"
                         + post_data["text"]
-                        + "\n\n---\n\n"
+                        + "\n\n---\n\n",
                     )
                     counter += 1
 
 
-def parse_all_posts():
-    global nposts_to_parse
+def parse_all_posts() -> None:
+    """Function to parse all posts from VK group.
 
+    Uses nposts_to_parse from config.json file, enumerates them and writes them to file.
+    """
     nposts_total = get_total_num_of_posts()
 
     if not nposts_to_parse or nposts_total < nposts_to_parse:
@@ -121,7 +130,7 @@ def parse_all_posts():
     counter = nposts_to_parse  # for enumerating posts. most recent = max value
     post_offset = 0
 
-    with open("../results/all.md", "w", encoding="utf-8") as output_file:
+    with Path.open("../results/all.md", "w", encoding="utf-8") as output_file:
         while post_offset < nposts_to_parse:
             count = (  # number of posts to parse on this iteration
                 MAX_COUNT
@@ -144,11 +153,10 @@ def parse_all_posts():
                     + post_data["link_to_post"]
                     + "\n\n"
                     + post_data["text"]
-                    + "\n\n---\n\n"
+                    + "\n\n---\n\n",
                 )
                 counter -= 1
 
 
 if __name__ == "__main__":
-    # parse_all_posts()
     parse_only_sunday_posts()

@@ -1,5 +1,6 @@
 .env
 env_*
+.venv
 .ruff_cache
 __pycache__
 poetry.lock

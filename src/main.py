@@ -4,6 +4,7 @@ from pathlib import Path
 
 import vk_api
 from dotenv import load_dotenv
+
 from utils import convert_unixtime_to_datetime, is_after, is_sunday
 
 load_dotenv()
@@ -88,9 +89,8 @@ def parse_only_sunday_posts() -> None:
 
     with Path.open("../results/sunday.md", "w", encoding="utf-8") as output_file:
         while post_offset > 0:
-            count = (  # number of posts to parse on this iteration
-                MAX_COUNT if post_offset >= MAX_COUNT else post_offset
-            )
+            # number of posts to parse on this iteration
+            count = min(MAX_COUNT, post_offset)
 
             print(f"Parsing posts from {post_offset - count} to {post_offset}")
 
@@ -130,11 +130,8 @@ def parse_all_posts() -> None:
 
     with Path.open("../results/all.md", "w", encoding="utf-8") as output_file:
         while post_offset < nposts_to_parse:
-            count = (  # number of posts to parse on this iteration
-                MAX_COUNT
-                if nposts_to_parse - post_offset > MAX_COUNT
-                else nposts_to_parse - post_offset
-            )
+            # number of posts to parse on this iteration
+            count = min(nposts_to_parse - post_offset, MAX_COUNT)
 
             print(f"Parsing posts from {post_offset} to {post_offset + count}")
 
@@ -158,3 +155,4 @@ def parse_all_posts() -> None:
 
 if __name__ == "__main__":
     parse_all_posts()
+    parse_only_sunday_posts()
